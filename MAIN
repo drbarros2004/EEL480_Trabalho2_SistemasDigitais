@@ -1,0 +1,208 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.numeric_std.all;
+
+entity FORCA is
+Port (
+		palpite: in std_logic_vector (2 downto 0);
+		reset : in std_logic := '0';
+		clock: in std_logic;
+		estado_out: out std_logic_vector (4 downto 0);
+		confirma: in std_logic := '0';                              
+		vidas: out std_logic_vector (2 downto 0) := "111";
+		ganhou: out std_logic; 
+		perdeu: out std_logic);  
+		
+-- A variável CONFIRMA permite que o jogador possa mexer nos switchers a vontade, pois seu palpite só será computado quando essa variável for 1.
+-- A senha é 71650.	
+
+end FORCA;
+
+architecture Behavioral of FORCA is
+
+signal estado_signal : std_logic_vector (4 downto 0) := "00000";
+signal vidas_signal : std_logic_vector (2 downto 0) := "111"; 
+signal confirma_signal : std_logic;
+signal palpite_signal : std_logic_vector (2 downto 0);
+signal ganhou_signal : std_logic := '0';
+signal perdeu_signal : std_logic:= '0';
+signal erros : std_logic_vector(2 downto 0) := "000";
+
+begin
+
+process (clock,reset) begin
+
+if(clock' event and clock = '1') then
+
+
+	case palpite is
+
+	when "111" =>
+		if (reset = '1') then
+			estado_signal <= "00000"; 
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		if (confirma = '1') then
+			estado_signal(4) <= '1';
+		end if; 
+		
+	when "001" =>
+		if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		if (confirma = '1') then
+			estado_signal(3) <= '1';
+		end if; 
+		
+		
+	when "110" =>
+		if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		if (confirma = '1') then
+			estado_signal(2) <= '1';
+		end if; 
+	
+		
+	when "101" =>
+		if (reset = '1') then
+			estado_signal <= "00000"; 
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		if (confirma = '1') then
+			estado_signal(1) <= '1';
+		end if; 
+		
+		
+	when "000" =>
+		if (reset = '1') then
+			estado_signal <= "00000"; 
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		if (confirma = '1') then
+			estado_signal(0) <= '1';
+		end if; 
+
+	when "010" =>
+	if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+	if (confirma = '1' AND erros(2) = '0') then
+		if vidas_signal(2) = '1' then
+			vidas_signal(2) <= '0';
+			erros(2) <= '1';
+		
+		elsif (vidas_signal(1) = '1' AND erros(2) = '0') then
+			vidas_signal(1) <= '0';
+			erros(2) <= '1';
+			
+		elsif (vidas_signal(0) = '1' AND erros(2) = '0') then
+			vidas_signal(0) <= '0';
+			erros(2) <= '1';
+		end if;
+		end if;
+		
+	when "011" =>
+	if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+		
+	if (confirma = '1' AND erros(1) = '0') then
+		if vidas_signal(2) = '1' then
+			vidas_signal(2) <= '0';
+			erros(1) <= '1';
+		
+		elsif (vidas_signal(1) = '1' AND erros(1) = '0') then
+			vidas_signal(1) <= '0';
+			erros(1) <= '1';
+			
+		elsif (vidas_signal(0) = '1' AND erros(1) = '0') then
+			vidas_signal(0) <= '0';
+			erros(1) <= '1';
+		end if;
+		end if;
+		
+	when "100" =>
+	if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+	if (confirma = '1' AND erros(0) = '0') then
+		if vidas_signal(2) = '1' then
+			vidas_signal(2) <= '0';
+			erros(0) <= '1';
+		
+		elsif (vidas_signal(1) = '1' AND erros(0) = '0') then
+			vidas_signal(1) <= '0';
+			erros(0) <= '1';
+			
+		elsif (vidas_signal(0) = '1' AND erros(0) = '0') then
+			vidas_signal(0) <= '0';
+			erros(0) <= '1';
+		end if;		
+		end if;
+		
+	when others =>                                         --Essa parte do código nem chega a ser utilizada, já que contemplamos todos os casos anteriormente.
+	if (reset = '1') then
+			estado_signal <= "00000";
+			ganhou_signal <= '0';
+			perdeu_signal <= '0';
+			vidas_signal <= "111";
+			erros <= "000";
+		end if;
+	if (confirma = '1') then
+		if vidas_signal(2) = '1' then
+			vidas_signal(2) <= '0';
+		
+		elsif vidas_signal(1) = '1' then
+			vidas_signal(1) <= '0';
+		
+		elsif vidas_signal(0) = '1' then
+			vidas_signal(0) <= '0';
+		end if;
+	end if; 
+	end case;
+
+end if;
+
+ganhou_signal <= estado_signal(4) and estado_signal(3) and estado_signal(2) and estado_signal(1) and estado_signal(0);
+
+if (vidas_signal = "000") then
+ganhou_signal <= '0';
+perdeu_signal <= '1';
+end if;
+end process;
+
+estado_out <= estado_signal;
+vidas <= vidas_signal;
+perdeu <= perdeu_signal;
+ganhou <= ganhou_signal ;
+end Behavioral;
